@@ -30,4 +30,19 @@ public class PhoneNumberValidatorUtils {
         return plusIsPresentAtBeginning && !inputString.isEmpty() ? "+" + inputString : inputString;
     }
 
+    /**
+     * checks if a string starts with a country code
+     * @param inputString the string to be checked
+     * @return if the string starts with a country code
+     */
+    public static boolean startsWithCountryCode(String inputString) {
+        boolean startsWithSubstring = false;
+        for (String substring : PhoneNumberValidatorUtils.COUNTRY_CALLING_CODES) {
+            if (inputString.startsWith(substring)) {
+                startsWithSubstring = true;
+                break;
+            }
+        }
+        return startsWithSubstring;
+    }
 }

@@ -27,14 +27,8 @@ public class PhoneNumberValidator {
         Matcher matcher = pattern.matcher(number);
         if (matcher.find()) {
             String result = matcher.group(0);
-            boolean startsWithSubstring = false;
-            for (String substring : PhoneNumberValidatorUtils.COUNTRY_CALLING_CODES) {
-                if (result.startsWith(substring)) {
-                    startsWithSubstring = true;
-                    break;
-                }
-            }
-            return startsWithSubstring && !PhoneNumberValidatorUtils.COUNTRY_CALLING_CODES.contains(result);
+            return PhoneNumberValidatorUtils.startsWithCountryCode(result) &&
+                   !PhoneNumberValidatorUtils.COUNTRY_CALLING_CODES.contains(result);
         }
         return false;
     }

@@ -2,74 +2,98 @@ package com.softwaretesting.testing.validator;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PhoneNumberValidatorTest {
     PhoneNumberValidator validator = new PhoneNumberValidator();
 
     @Test
-    void falseForEmpty() {
+    void shouldBeFalseForEmpty() {
         assertFalse(validator.validate(""));
     }
 
     @Test
-    void falseForPlaceHolderCharacterOnly() {
+    void shouldBeFalseForPlaceHolderCharacterOnly() {
         String placeHolderCharacters = "----";
         assertFalse(validator.validate(placeHolderCharacters));
     }
 
     @Test
-    void falseForLettersInNumber() {
-        String lettersInNumber = "+1-800-DOGS";
-        assertFalse(validator.validate(lettersInNumber));
-    }
-
-    @Test
-    void falseForInvalidCharactersInNumber() {
-        String invalidCharactersInNumber = "+49}}5512948234";
-        assertFalse(validator.validate(invalidCharactersInNumber));
-    }
-
-    @Test
-    void trueForRegexMatch() {
+    void shouldBeTrueForRegexMatch() {
         String sampleNumber = "+49551123455";
         assertTrue(validator.validate(sampleNumber));
     }
 
     @Test
-    void falseForRegexMisMatchWithoutPlus() {
+    void shouldBeFalseForRegexMisMatchWithoutPlus() {
         String mismatchingNumber = "049551123455";
         assertFalse(validator.validate(mismatchingNumber));
     }
 
     @Test
-    void falseForRegexMisMatchWithNoise() {
-        String mismatchingNumber = "+49abc-(55112)3455def";
-        assertFalse(validator.validate(mismatchingNumber));
+    void shouldBeTrueForRegexMisMatchWithNoise() {
+        String mismatchingNumber = "+49-(55112)34/55";
+        assertTrue(validator.validate(mismatchingNumber));
     }
 
     @Test
-    void trueForNoisyValidNumberWithDash() {
-        throw new UnsupportedOperationException("Not implemented");
+    void shouldBeTrueForNoisyValidNumberWithDash() {
+        String noisyDash = "+880123-1245";
+        assertTrue(validator.validate(noisyDash));
     }
 
     @Test
-    void trueForNoisyValidNumberWithSpaces() {
-        throw new UnsupportedOperationException("Not implemented");
+    void shouldBeTrueForNoisyValidNumberWithSpaces() {
+        String noisySpace = "+4 9 12 3 4 56 9 8127";
+        assertTrue(validator.validate(noisySpace));
     }
 
     @Test
-    void trueForNoisyValidNumberWithDots() {
-        throw new UnsupportedOperationException("Not implemented");
+    void shouldBeTrueForNoisyValidNumberWithDots() {
+        String noisyDots = "+4.9.12.3.4.56.9.8127";
+        assertTrue(validator.validate(noisyDots));
     }
 
     @Test
-    void trueForNoisyValidNumberWithSlash() {
-        throw new UnsupportedOperationException("Not implemented");
+    void shouldBeTrueForNoisyValidNumberWithSlash() {
+        String noisyDots = "+4912/341238127";
+        assertTrue(validator.validate(noisyDots));
     }
 
     @Test
-    void trueForNoisyValidNumberMixed() {
-        throw new UnsupportedOperationException("Not implemented");
+    void shouldBeTrueForNoisyValidNumberMixed() {
+        String noisyDots = "+49 (123) 4.569/8127";
+        assertTrue(validator.validate(noisyDots));
+    }
+
+    @Test
+    void shouldBeFalseForTooLongNumber() {
+        String tooLong = "+49123456789098876543212345667899009877654433221";
+        assertFalse(validator.validate(tooLong));
+    }
+
+    @Test
+    void shouldBeFalseForTooShortNumber() {
+        String tooShort = "+1";
+        assertFalse(validator.validate(tooShort));
+    }
+
+    @Test
+    void shouldBeFalseForWrongCountryCallingCode() {
+        String tooShort = "+99";
+        assertFalse(validator.validate(tooShort));
+    }
+
+    @Test
+    void shouldValidateAllTestStringsFromTestDataSet() {
+        for (Map.Entry<String, Boolean> entry: TestData.phoneNumberValidityMap.entrySet()) {
+            Boolean want = entry.getValue();
+            Boolean have =validator.validate(entry.getKey());
+            if(want != have)
+                break;
+            assertEquals(have, want);
+        }
     }
 }

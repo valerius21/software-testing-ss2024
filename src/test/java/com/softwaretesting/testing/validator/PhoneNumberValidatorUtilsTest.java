@@ -60,4 +60,12 @@ class PhoneNumberValidatorUtilsTest {
         String want = "49";
         assertEquals(PhoneNumberValidatorUtils.clean(have), want);
     }
+
+    @Test
+    void shouldRemoveRegexSensitiveSpecialCharacterDot() {
+        String have = "String input = \"This is a test string with special characters " +
+                "like # ^$*.[]{}()\\\\+?|\";\n";
+        String want = "";
+        assertEquals(PhoneNumberValidatorUtils.clean(have), want);
+    }
 }

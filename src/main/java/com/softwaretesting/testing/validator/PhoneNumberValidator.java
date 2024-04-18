@@ -2,6 +2,7 @@ package com.softwaretesting.testing.validator;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -9,8 +10,13 @@ import java.util.regex.Matcher;
 @Service
 public class PhoneNumberValidator {
     /**
-     * Validates Phone Numbers to be valid
-     * Uses a RegEx utilising linked resources.
+     * {@link PhoneNumberValidator#validate(String)}
+     */
+    private final Pattern pattern = Pattern.compile("^\\+[1-9]\\d{1,14}$");
+
+    /**
+     * Validates Phone Numbers to be in a valid format following the E164 specification.
+     * Uses a RegEx from the linked resources.
      *
      * @param number the phone number
      * @return if its valid
@@ -18,8 +24,19 @@ public class PhoneNumberValidator {
      * @see <a href="https://www.twilio.com/docs/glossary/what-e164#regex-matching-for-e164">Twilio Phone Number RegEx</a>
      */
     public boolean validate(String number) {
-        Pattern pattern = Pattern.compile("^\\+[1-9]\\d{1,14}$");
+        number = PhoneNumberValidatorUtils.clean(number);
         Matcher matcher = pattern.matcher(number);
-        return matcher.find();
+        if (matcher.find()) {
+            String result = matcher.group(0);
+            boolean startsWithSubstring = false;
+            for (String substring : PhoneNumberValidatorUtils.COUNTRY_CALLING_CODES) {
+                if (result.startsWith(substring)) {
+                    startsWithSubstring = true;
+                    break;
+                }
+            }
+            return startsWithSubstring && !PhoneNumberValidatorUtils.COUNTRY_CALLING_CODES.contains(result);
+        }
+        return false;
     }
 }

@@ -2,9 +2,8 @@ package com.softwaretesting.testing.validator;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Service

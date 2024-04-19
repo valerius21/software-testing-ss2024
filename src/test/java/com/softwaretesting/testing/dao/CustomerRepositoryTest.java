@@ -17,7 +17,6 @@ public class CustomerRepositoryTest {
 
     private static Optional<Customer> phoneCustomerOptional;
     private static final String username = "testUser";
-
     private static final String testPhoneNumber = "+4955112345";
 
     @BeforeAll

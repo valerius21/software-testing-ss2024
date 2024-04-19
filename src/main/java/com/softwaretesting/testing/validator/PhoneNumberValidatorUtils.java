@@ -34,6 +34,7 @@ public class PhoneNumberValidatorUtils {
 
     /**
      * checks if a string starts with a country code
+     *
      * @param inputString the string to be checked
      * @return if the string starts with a country code
      */

@@ -30,7 +30,7 @@ public class PhoneNumberValidator {
         if (matcher.find()) {
             String result = matcher.group(0);
             return PhoneNumberValidatorUtils.startsWithCountryCode(result) &&
-                   !PhoneNumberValidatorUtils.COUNTRY_CALLING_CODES.contains(result);
+                    !PhoneNumberValidatorUtils.COUNTRY_CALLING_CODES.contains(result);
         }
         return false;
     }

@@ -46,4 +46,25 @@ class PhoneNumberValidatorUtilsTest {
         String want = "";
         assertEquals(PhoneNumberValidatorUtils.clean(have), want);
     }
+
+    @Test
+    void shouldBeUnequalForRemovingFromANonNumberStringAllCharacters() {
+        String have = "Hello, World";
+        String want = "";
+        assertNotEquals(PhoneNumberValidatorUtils.clean(have), want);
+    }
+
+    @Test
+    void shouldBeUnequalForReturnOnlyTheNumbersInside() {
+        String have = "49 Hello, World";
+        String want = "49";
+        assertNotEquals(PhoneNumberValidatorUtils.clean(have), want);
+    }
+
+    @Test
+    void shouldRemoveRegexSensitiveSpecialCharacterDot() {
+        String have = "#^$*.[]{}()\\\\+?|\";\n";
+        String want = "";
+        assertEquals(PhoneNumberValidatorUtils.clean(have), want);
+    }
 }

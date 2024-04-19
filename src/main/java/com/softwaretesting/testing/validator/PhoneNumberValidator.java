@@ -2,6 +2,7 @@ package com.softwaretesting.testing.validator;
 
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +23,7 @@ public class PhoneNumberValidator {
      * @see <a href="https://www.itu.int/rec/T-REC-E.164/en">E.164 Internaltional Phone Number Specification</a>
      * @see <a href="https://www.twilio.com/docs/glossary/what-e164#regex-matching-for-e164">Twilio Phone Number RegEx</a>
      */
+    @NotNull
     public boolean validate(String number) {
         number = PhoneNumberValidatorUtils.clean(number);
         Matcher matcher = pattern.matcher(number);

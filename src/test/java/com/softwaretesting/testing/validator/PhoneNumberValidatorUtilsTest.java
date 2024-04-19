@@ -67,4 +67,10 @@ class PhoneNumberValidatorUtilsTest {
         String want = "";
         assertEquals(PhoneNumberValidatorUtils.clean(have), want);
     }
+
+    @Test
+    void shouldFailWithNull() {
+        String input = null;
+        assertThrows(NullPointerException.class, () -> PhoneNumberValidatorUtils.clean(input));
+    }
 }

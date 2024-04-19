@@ -96,4 +96,10 @@ class PhoneNumberValidatorTest {
             assertEquals(have, want);
         }
     }
+
+    @Test
+    void shouldFailWithNullInput() {
+        String input = null;
+        assertThrows(NullPointerException.class, () -> validator.validate(input));
+    }
 }

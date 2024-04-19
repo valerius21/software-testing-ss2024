@@ -1,5 +1,6 @@
 package com.softwaretesting.testing.validator;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class PhoneNumberValidatorUtils {
      * @param inputString the dirty string
      * @return the sanitized string
      */
+    @NotNull
     public static String clean(String inputString) {
         if (inputString.isEmpty()) return "";
         boolean plusIsPresentAtBeginning = inputString.charAt(0) == '+' && inputString.length() > 1;
@@ -35,6 +37,7 @@ public class PhoneNumberValidatorUtils {
      * @param inputString the string to be checked
      * @return if the string starts with a country code
      */
+    @NotNull
     public static boolean startsWithCountryCode(String inputString) {
         boolean startsWithSubstring = false;
         for (String substring : PhoneNumberValidatorUtils.COUNTRY_CALLING_CODES) {

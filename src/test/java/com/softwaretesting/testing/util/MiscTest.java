@@ -66,13 +66,60 @@ class MiscTest {
 
 
     @Test
-    void calculateFactorial() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void testCalculateFactorial_Zero() {
+        assertEquals(1, Misc.calculateFactorial(0));
     }
 
     @Test
-    void isPrime() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void testCalculateFactorial_PositiveInteger() {
+        assertEquals(1, Misc.calculateFactorial(1));
+        assertEquals(2, Misc.calculateFactorial(2));
+        assertEquals(6, Misc.calculateFactorial(3));
+        assertEquals(24, Misc.calculateFactorial(4));
+        assertEquals(120, Misc.calculateFactorial(5));
+        // Add more positive integer test cases as needed
+    }
+
+    @Test()
+    public void testCalculateFactorial_NegativeInteger() {
+        assertThrows(RuntimeException.class, () -> Misc.calculateFactorial(-1));
+    }
+
+    @Test
+    public void testIsPrime_Zero() {
+        assertFalse(Misc.isPrime(0, 2));
+    }
+
+    @Test
+    public void testIsPrime_One() {
+        assertFalse(Misc.isPrime(1, 2));
+    }
+
+    @Test
+    public void testIsPrime_Two() {
+        assertTrue(Misc.isPrime(2, 2));
+    }
+
+    @Test
+    public void testIsPrime_PrimeNumbers() {
+        assertTrue(Misc.isPrime(3, 2));
+        assertTrue(Misc.isPrime(5, 2));
+        assertTrue(Misc.isPrime(7, 2));
+        assertTrue(Misc.isPrime(11, 2));
+    }
+
+    @Test
+    public void testIsPrime_NonPrimeNumbers() {
+        assertFalse(Misc.isPrime(4, 2));
+        assertFalse(Misc.isPrime(6, 2));
+        assertFalse(Misc.isPrime(8, 2));
+        assertFalse(Misc.isPrime(9, 2));
+        assertFalse(Misc.isPrime(10, 2));
+    }
+
+    @Test()
+    public void testIsPrime_NegativeNumber() {
+        assertFalse(Misc.isPrime(-1, 2));
     }
 
     @Test

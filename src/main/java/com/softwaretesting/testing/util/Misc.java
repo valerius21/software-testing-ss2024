@@ -36,17 +36,22 @@ public class Misc {
     }
 
     public static long calculateFactorial(int num) {
-        if (num >= 1) {
-            return num * calculateFactorial(num - 1);
+        if (num < 0) {
+            throw new RuntimeException("This operation would result in calculation factorial by zero error.");
+        } else if (num == 0) {
+            return 1;
         }
         else {
-            return 1;
+            return num * calculateFactorial(num - 1);
         }
     }
 
     public static boolean isPrime(int n, int i) {
+        if (n <= 0) {
+           return false;
+        }
         if (n <= 2) {
-            return (n == 2) ? true : false;
+            return n == 2;
         }
         if (n % i == 0) {
             return false;

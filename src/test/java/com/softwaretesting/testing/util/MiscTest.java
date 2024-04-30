@@ -123,7 +123,39 @@ class MiscTest {
     }
 
     @Test
-    void isEven() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void testIsEven_Zero() {
+        assertTrue(Misc.isEven(0));
+    }
+
+    @Test
+    public void testIsEven_PositiveEvenNumbers() {
+        assertTrue(Misc.isEven(2));
+        assertTrue(Misc.isEven(4));
+        assertTrue(Misc.isEven(6));
+        assertTrue(Misc.isEven(8));
+    }
+
+    @Test
+    public void testIsEven_PositiveOddNumbers() {
+        assertFalse(Misc.isEven(1));
+        assertFalse(Misc.isEven(3));
+        assertFalse(Misc.isEven(5));
+        assertFalse(Misc.isEven(7));
+    }
+
+    @Test
+    public void testIsEven_NegativeEvenNumbers() {
+        assertTrue(Misc.isEven(-2));
+        assertTrue(Misc.isEven(-4));
+        assertTrue(Misc.isEven(-6));
+        assertTrue(Misc.isEven(-8));
+    }
+
+    @Test
+    public void testIsEven_NegativeOddNumbers() {
+        assertFalse(Misc.isEven(-1));
+        assertFalse(Misc.isEven(-3));
+        assertFalse(Misc.isEven(-5));
+        assertFalse(Misc.isEven(-7));
     }
 }

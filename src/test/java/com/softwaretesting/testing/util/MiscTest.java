@@ -7,13 +7,41 @@ import static org.junit.jupiter.api.Assertions.*;
 class MiscTest {
 
     @Test
-    void sum() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void testPositiveNumbers() {
+        assertEquals(8, Misc.sum(5, 3));
     }
 
     @Test
-    void divide() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void testNegativeNumbers() {
+        assertEquals(-8, Misc.sum(-5, -3));
+    }
+
+    @Test
+    public void testZeroAndPositiveNumber() {
+        assertEquals(5, Misc.sum(0, 5));
+    }
+
+    @Test
+    public void testZeroAndNegativeNumber() {
+        assertEquals(-5, Misc.sum(0, -5));
+    }
+
+    @Test
+    public void testZeroAndZero() {
+        assertEquals(0, Misc.sum(0, 0));
+    }
+
+
+    @Test
+    public void testDivision() {
+        assertEquals(2.5, Misc.divide(5, 2), 0.0001);
+        assertEquals(-3.0, Misc.divide(-15, 5), 0.0001);
+        assertEquals(0.25, Misc.divide(1, 4), 0.0001);
+    }
+
+    @Test()
+    public void testDivisionByZero() {
+        assertThrows(RuntimeException.class, () -> Misc.divide(10, 0));
     }
 
     @Test

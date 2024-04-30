@@ -19,7 +19,7 @@ public class Misc {
             throw new RuntimeException("This operation would result in division by zero error.");
         }
 
-        return divide / divideBy;
+        return (double) divide / divideBy;
     }
 
     public static boolean isColorSupported(Color color) {

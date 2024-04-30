@@ -30,6 +30,7 @@ public class TestData {
         put("+995 55-123-4567", true);
         put("+1 000-123-4567", true);
         put("+1 555-123-4567 ext. ABC", false);
+        put("+0 1235132415", false);
         put("", false);
         put("         ", false);
         put("---------", false);

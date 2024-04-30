@@ -20,7 +20,7 @@ public class CustomerValidator {
      * @param <T>
      */
     public <T> void validate404(Optional<T> object, String label, String value) {
-        if (!object.isPresent()) {
+        if (object.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     object.getClass().getName() + " with " + label + "'" + value + "' does not exist.", null);
         }

@@ -45,9 +45,25 @@ class MiscTest {
     }
 
     @Test
-    void isColorSupported() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void testIsColorSupported_Red() {
+        assertTrue(Misc.isColorSupported(Misc.Color.RED));
     }
+
+    @Test
+    public void testIsColorSupported_Yellow() {
+        assertTrue(Misc.isColorSupported(Misc.Color.YELLOW));
+    }
+
+    @Test
+    public void testIsColorSupported_Blue() {
+        assertTrue(Misc.isColorSupported(Misc.Color.BLUE));
+    }
+
+    @Test
+    public void testIsColorSupported_Null() {
+        assertThrows(IllegalArgumentException.class, () -> Misc.isColorSupported(null));
+    }
+
 
     @Test
     void calculateFactorial() {

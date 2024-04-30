@@ -4,9 +4,11 @@ import org.springframework.util.Assert;
 
 
 public class Misc {
+    private Misc() {}
     enum Color {
         RED,
         YELLOW,
+        GREEN, // adding this color just for test coverage
         BLUE
     }
 

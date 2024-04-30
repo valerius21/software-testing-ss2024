@@ -58,6 +58,10 @@ class MiscTest {
     public void testIsColorSupported_Blue() {
         assertTrue(Misc.isColorSupported(Misc.Color.BLUE));
     }
+    @Test
+    public void testIsColorSupported_False() {
+        assertFalse(Misc.isColorSupported(Misc.Color.GREEN));
+    }
 
     @Test
     public void testIsColorSupported_Null() {

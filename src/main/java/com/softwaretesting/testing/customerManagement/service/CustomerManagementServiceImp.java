@@ -66,7 +66,7 @@ public class CustomerManagementServiceImp implements CustomerManagementService {
     public void delete(Long customerId) {
 
 
-        if(!customerRepository.existsById(customerId)) {
+        if (!customerRepository.existsById(customerId)) {
             throw new CustomerNotFoundException(
                     "Customer with id " + customerId + " does not exists");
         }

@@ -24,8 +24,8 @@ class CustomerRepositoryTest {
     private Customer getDummyCustomer() {
         return new Customer(
                 0L,
-                "jakob",
-                "full name",
+                "NOR",
+                "Lando Norris",
                 "+405512312451");
     }
 

@@ -16,7 +16,7 @@ public class PhoneNumberValidatorUtils {
      *
      * @see <a href="https://gist.github.com/tahirSmartboy/14cd096f25c24b30c203#file-gistfile1-txt-L223">Borrowed from here.</a>
      */
-    public static final List<String> COUNTRY_CALLING_CODES = Arrays.stream(codes).map(x -> "+" + x).collect(Collectors.toList());
+    protected static final List<String> COUNTRY_CALLING_CODES = Arrays.stream(codes).map(x -> "+" + x).collect(Collectors.toList());
 
     /**
      * Removes all characters, except a leading "+", if there is one.
@@ -29,6 +29,7 @@ public class PhoneNumberValidatorUtils {
         if (inputString.isEmpty()) return "";
         boolean plusIsPresentAtBeginning = inputString.charAt(0) == '+' && inputString.length() > 1;
         inputString = inputString.replaceAll("[^a-zA-Z0-9]", "");
+        inputString = inputString.replaceAll("[a-zA-Z]", "");
         return plusIsPresentAtBeginning && !inputString.isEmpty() ? "+" + inputString : inputString;
     }
 

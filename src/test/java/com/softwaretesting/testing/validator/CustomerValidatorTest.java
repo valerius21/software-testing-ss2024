@@ -3,13 +3,15 @@ package com.softwaretesting.testing.validator;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerValidatorTest {
 
     @Test
-    public void testValidate404ObjectPresentNoExceptionThrown() {
+    void testValidate404ObjectPresentNoExceptionThrown() {
         CustomerValidator validator = new CustomerValidator();
         Optional<String> object = Optional.of("someObject");
         String label = "User-Name";
@@ -19,7 +21,7 @@ class CustomerValidatorTest {
     }
 
     @Test
-    public void testValidate404ObjectNotPresentResponseStatusExceptionThrown() {
+    void testValidate404ObjectNotPresentResponseStatusExceptionThrown() {
         CustomerValidator validator = new CustomerValidator();
         Optional<String> object = Optional.empty();
         String label = "User-Name";

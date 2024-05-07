@@ -1,61 +1,109 @@
 package com.softwaretesting.testing.dao;
 
 import com.softwaretesting.testing.model.Customer;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
-public class CustomerRepositoryTest {
-    private static Customer customer;
-    private static CustomerRepository customerRepository;
-    private static Optional<Customer> findCustomerOptional;
 
-    private static Optional<Customer> phoneCustomerOptional;
-    private static final String username = "testUser";
-    private static final String testPhoneNumber = "+4955112345";
+@ExtendWith(SpringExtension.class)
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+class CustomerRepositoryTest {
+    @Autowired
+    private CustomerRepository customerRepository;
 
-    @BeforeAll
-    public static void createMockInstance() {
-        customerRepository = Mockito.mock(CustomerRepository.class);
-        customer = new Customer();
-        customer.setUserName(username);
-        customer.setPhoneNumber(testPhoneNumber);
-
-        when(customerRepository.findByUserName(username)).thenReturn(Optional.of(customer));
-        findCustomerOptional = customerRepository.findByUserName(username);
-
-        when(customerRepository.selectCustomerByPhoneNumber(testPhoneNumber)).thenReturn(Optional.of(customer));
-        phoneCustomerOptional = customerRepository.selectCustomerByPhoneNumber(testPhoneNumber);
+    private Customer getDummyCustomer() {
+        return new Customer(
+                0L,
+                "jakob",
+                "full name",
+                "+405512312451");
     }
 
     @Test
-    public void shouldVerifyThatCustomerOptionalExists() {
-        assertTrue(findCustomerOptional.isPresent());
+    void createOne() {
+        final Customer insertedCustomer = customerRepository.save(getDummyCustomer());
+        final Optional<Customer> customerById = customerRepository.findById(insertedCustomer.getId());
+        assertTrue(customerById.isPresent());
+        assertEquals(insertedCustomer, customerById.get());
     }
 
     @Test
-    public void shouldFindUserByName() {
-        if (findCustomerOptional.isEmpty()) {
-            fail("customer should be present");
-        }
-        assertEquals(username, findCustomerOptional.get().getUserName());
+    void addDeleteCheck() {
+        final Customer insertedCustomer = customerRepository.save(getDummyCustomer());
+        assertTrue(customerRepository.existsById(insertedCustomer.getId()));
+
+        customerRepository.deleteById(insertedCustomer.getId());
+        assertFalse(customerRepository.existsById(insertedCustomer.getId()));
     }
 
     @Test
-    void shouldVerifyThatCustomerOptionalWithPhoneNumberExists() {
-        assertTrue(phoneCustomerOptional.isPresent());
+    void findByName() {
+        final String userName = "testuser";
+        final Customer customerWithUserName = getDummyCustomer();
+        customerWithUserName.setUserName(userName);
+
+        final Customer insertedCustomer = customerRepository.save(customerWithUserName);
+        final Optional<Customer> customerByUserName = customerRepository.findByUserName(userName);
+
+        assertTrue(customerByUserName.isPresent());
+        assertEquals(insertedCustomer, customerByUserName.get());
     }
 
     @Test
-    void shouldSelectCustomerByPhoneNumber() {
-        if (phoneCustomerOptional.isEmpty()) {
-            fail("customer with phone number should be present");
-        }
-        assertEquals(testPhoneNumber, phoneCustomerOptional.get().getPhoneNumber());
+    void findByPhoneNumber() {
+        final String phoneNumber = "+49123412";
+        final Customer customerWithPhoneNumber = getDummyCustomer();
+        customerWithPhoneNumber.setPhoneNumber(phoneNumber);
+
+        final Customer insertedCustomer = customerRepository.save(customerWithPhoneNumber);
+        final Optional<Customer> customerByPhoneNumber = customerRepository.selectCustomerByPhoneNumber(phoneNumber);
+
+        assertTrue(customerByPhoneNumber.isPresent());
+        assertEquals(insertedCustomer, customerByPhoneNumber.get());
+    }
+
+
+    @Test
+    void deleteMany() {
+        final List<Customer> customerList = List.of(getDummyCustomer(), getDummyCustomer(), getDummyCustomer());
+        final Iterable<Customer> insertedCustomerList = customerRepository.saveAll(customerList);
+
+        final Iterable<Customer> allCustomerList = customerRepository.findAll();
+
+        assertEquals(insertedCustomerList, allCustomerList);
+
+        customerRepository.deleteAll(insertedCustomerList);
+        assertEquals(0, customerRepository.count());
+    }
+
+    @Test
+    void deleteAll() {
+        final List<Customer> customerList = List.of(getDummyCustomer(), getDummyCustomer(), getDummyCustomer());
+        final Iterable<Customer> insertedCustomerList = customerRepository.saveAll(customerList);
+
+        final Iterable<Customer> allCustomerList = customerRepository.findAll();
+
+        assertEquals(insertedCustomerList, allCustomerList);
+
+        customerRepository.deleteAll();
+        assertEquals(0, customerRepository.count());
+    }
+
+    @Test
+    void aggregate() {
+        final List<Customer> customerList = List.of(getDummyCustomer(), getDummyCustomer(), getDummyCustomer());
+        customerRepository.saveAll(customerList);
+
+        assertEquals(customerList.size(), customerRepository.count());
     }
 }

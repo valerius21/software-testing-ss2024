@@ -81,24 +81,24 @@ class PhoneNumberValidatorTest {
     }
 
     @Test
-    void shouldBeFalseForWrongCountryCallingCode() {
+void shouldBeFalseForWrongCountryCallingCode() {
         String tooShort = "+99";
         assertFalse(validator.validate(tooShort));
     }
 
     @Test
     void shouldValidateAllTestStringsFromTestDataSet() {
-        for (Map.Entry<String, Boolean> entry : TestData.phoneNumberValidityMap.entrySet()) {
+        for (Map.Entry<String, Boolean> entry: TestData.phoneNumberValidityMap.entrySet()) {
             Boolean want = entry.getValue();
-            Boolean have = validator.validate(entry.getKey());
-            if (want != have)
+            Boolean have =validator.validate(entry.getKey());
+            if(want != have)
                 break;
             assertEquals(have, want);
         }
     }
 
     @Test
-    void shouldFailWithNullInput() {
+    void shoudFailWithNullInput() {
         String input = null;
         assertThrows(NullPointerException.class, () -> validator.validate(input));
     }

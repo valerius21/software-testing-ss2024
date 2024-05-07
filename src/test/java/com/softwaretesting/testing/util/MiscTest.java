@@ -81,7 +81,6 @@ class MiscTest {
         assertEquals(6, Misc.calculateFactorial(3));
         assertEquals(24, Misc.calculateFactorial(4));
         assertEquals(120, Misc.calculateFactorial(5));
-        // Add more positive integer test cases as needed
     }
 
     @Test()

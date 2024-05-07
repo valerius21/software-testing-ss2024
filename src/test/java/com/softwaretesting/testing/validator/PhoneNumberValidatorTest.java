@@ -2,9 +2,8 @@ package com.softwaretesting.testing.validator;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,19 +71,14 @@ class PhoneNumberValidatorTest {
 
     @Test
     void shouldBeFalseForWrongCountryCallingCode() {
-        String tooShort = "+99";
-        assertFalse(validator.validate(tooShort));
+        String wrongCode = "+99";
+        assertFalse(validator.validate(wrongCode));
     }
 
-    @Test
-    void shouldValidateAllTestStringsFromTestDataSet() {
-        for (Map.Entry<String, Boolean> entry : TestData.phoneNumberValidityMap.entrySet()) {
-            Boolean want = entry.getValue();
-            Boolean have = validator.validate(entry.getKey());
-            if (want != have)
-                break; // FIXME:
-            assertEquals(have, want);
-        }
+    @ParameterizedTest
+    @CsvFileSource(resources = "ValidatorData.csv")
+    void validateTestFromDataSet(String input, boolean isSuccessful) {
+        assertEquals(isSuccessful, validator.validate(input));
     }
 
     @Test

@@ -1,6 +1,8 @@
 package com.softwaretesting.testing.validator;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Map;
 
@@ -50,22 +52,10 @@ class PhoneNumberValidatorTest {
         assertTrue(validator.validate(noisySpace));
     }
 
-    @Test
-    void shouldBeTrueForNoisyValidNumberWithDots() {
-        String noisyDots = "+4.9.12.3.4.56.9.8127";
-        assertTrue(validator.validate(noisyDots));
-    }
-
-    @Test
-    void shouldBeTrueForNoisyValidNumberWithSlash() {
-        String noisyDots = "+4912/341238127";
-        assertTrue(validator.validate(noisyDots));
-    }
-
-    @Test
-    void shouldBeTrueForNoisyValidNumberMixed() {
-        String noisyDots = "+49 (123) 4.569/8127";
-        assertTrue(validator.validate(noisyDots));
+    @ParameterizedTest
+    @ValueSource(strings = {"+4.9.12.3.4.56.9.8127", "+4912/341238127", "+49 (123) 4.569/8127"})
+    void shouldBeTrueForNoisyValidNumberWithDots(String noisy) {
+        assertTrue(validator.validate(noisy));
     }
 
     @Test
@@ -81,24 +71,24 @@ class PhoneNumberValidatorTest {
     }
 
     @Test
-void shouldBeFalseForWrongCountryCallingCode() {
+    void shouldBeFalseForWrongCountryCallingCode() {
         String tooShort = "+99";
         assertFalse(validator.validate(tooShort));
     }
 
     @Test
     void shouldValidateAllTestStringsFromTestDataSet() {
-        for (Map.Entry<String, Boolean> entry: TestData.phoneNumberValidityMap.entrySet()) {
+        for (Map.Entry<String, Boolean> entry : TestData.phoneNumberValidityMap.entrySet()) {
             Boolean want = entry.getValue();
-            Boolean have =validator.validate(entry.getKey());
-            if(want != have)
-                break;
+            Boolean have = validator.validate(entry.getKey());
+            if (want != have)
+                break; // FIXME:
             assertEquals(have, want);
         }
     }
 
     @Test
-    void shoudFailWithNullInput() {
+    void shouldFailWithNullInput() {
         String input = null;
         assertThrows(NullPointerException.class, () -> validator.validate(input));
     }

@@ -19,6 +19,10 @@ class CustomerRepositoryTest {
     @Autowired
     private CustomerRepository customerRepository;
 
+    /**
+     * This method is used to create a fresh dummy customer object.
+     * @return a dummy customer object
+     */
     private Customer getDummyCustomer() {
         return new Customer(
                 0L,

@@ -21,7 +21,7 @@ class CustomerManagementServiceImpTest {
     private CustomerRepository customerRepository;
 
     @Mock
-    private CustomerValidator customerValidator;
+    private CustomerValidator _customerValidator;
 
     @InjectMocks
     private CustomerManagementServiceImp customerManagementService;

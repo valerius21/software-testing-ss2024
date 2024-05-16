@@ -1,7 +1,11 @@
 package com.softwaretesting.testing.util;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import static com.softwaretesting.testing.util.Misc.isPrime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MiscTest {
@@ -31,12 +35,19 @@ class MiscTest {
         assertEquals(0, Misc.sum(0, 0));
     }
 
-
     @Test
-    void testDivision() {
-        assertEquals(2.5, Misc.divide(5, 2), 0.0001);
-        assertEquals(-3.0, Misc.divide(-15, 5), 0.0001);
-        assertEquals(0.25, Misc.divide(1, 4), 0.0001);
+    void testForEqualSquare() {
+        assertFalse(isPrime(4, 2));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "2.5,5,2",
+            "-3.0,-15,5",
+            "0.25,1,4",
+    })
+    void testDivision(double expected, int divide, int divideBy) {
+        assertEquals(expected, Misc.divide(divide, divideBy), 0.0001);
     }
 
     @Test()
@@ -75,13 +86,21 @@ class MiscTest {
         assertEquals(1, Misc.calculateFactorial(0));
     }
 
-    @Test
-    void testCalculateFactorial_PositiveInteger() {
-        assertEquals(1, Misc.calculateFactorial(1));
-        assertEquals(2, Misc.calculateFactorial(2));
-        assertEquals(6, Misc.calculateFactorial(3));
-        assertEquals(24, Misc.calculateFactorial(4));
-        assertEquals(120, Misc.calculateFactorial(5));
+    @ParameterizedTest
+    @CsvSource({
+            "1,1",
+            "2,2",
+            "3,6",
+            "4,24",
+            "5,120",
+            "6,720",
+            "7,5040",
+            "8,40320",
+            "9,362880",
+            "10,3628800",
+    })
+    void testCalculateFactorial(int number, int expected) {
+        assertEquals(expected, Misc.calculateFactorial(number));
     }
 
     @Test()
@@ -91,39 +110,35 @@ class MiscTest {
 
     @Test
     void testIsPrime_Zero() {
-        assertFalse(Misc.isPrime(0, 2));
+        assertFalse(isPrime(0, 2));
     }
 
     @Test
     void testIsPrime_One() {
-        assertFalse(Misc.isPrime(1, 2));
+        assertFalse(isPrime(1, 2));
     }
 
     @Test
     void testIsPrime_Two() {
-        assertTrue(Misc.isPrime(2, 2));
+        assertTrue(isPrime(2, 2));
     }
 
-    @Test
-    void testIsPrime_PrimeNumbers() {
-        assertTrue(Misc.isPrime(3, 2));
-        assertTrue(Misc.isPrime(5, 2));
-        assertTrue(Misc.isPrime(7, 2));
-        assertTrue(Misc.isPrime(11, 2));
+
+    @ParameterizedTest
+    @ValueSource(ints = {3, 5, 7, 11})
+    void testIsPrime_PrimeNumbers(int number) {
+        assertTrue(isPrime(number, 2));
     }
 
-    @Test
-    void testIsPrime_NonPrimeNumbers() {
-        assertFalse(Misc.isPrime(4, 2));
-        assertFalse(Misc.isPrime(6, 2));
-        assertFalse(Misc.isPrime(8, 2));
-        assertFalse(Misc.isPrime(9, 2));
-        assertFalse(Misc.isPrime(10, 2));
+    @ParameterizedTest
+    @ValueSource(ints = {4, 9, 16, 25})
+    void testIsPrime_NonPrimePerfectSquares(int number) {
+        assertFalse(isPrime(number, 2));
     }
 
     @Test()
     void testIsPrime_NegativeNumber() {
-        assertFalse(Misc.isPrime(-1, 2));
+        assertFalse(isPrime(-1, 2));
     }
 
     @Test
@@ -131,35 +146,45 @@ class MiscTest {
         assertTrue(Misc.isEven(0));
     }
 
-    @Test
-    void testIsEven_PositiveEvenNumbers() {
-        assertTrue(Misc.isEven(2));
-        assertTrue(Misc.isEven(4));
-        assertTrue(Misc.isEven(6));
-        assertTrue(Misc.isEven(8));
+    @ParameterizedTest
+    @ValueSource(ints = {2, 4, 6, 8})
+    void testIsEven_PositiveEvenNumbers(int number) {
+        assertTrue(Misc.isEven(number));
     }
 
-    @Test
-    void testIsEven_PositiveOddNumbers() {
-        assertFalse(Misc.isEven(1));
-        assertFalse(Misc.isEven(3));
-        assertFalse(Misc.isEven(5));
-        assertFalse(Misc.isEven(7));
+    @ParameterizedTest
+    @ValueSource(ints = {1, 3, 5, 7})
+    void testIsEven_PositiveOddNumbers(int number) {
+        assertFalse(Misc.isEven(number));
     }
 
-    @Test
-    void testIsEven_NegativeEvenNumbers() {
-        assertTrue(Misc.isEven(-2));
-        assertTrue(Misc.isEven(-4));
-        assertTrue(Misc.isEven(-6));
-        assertTrue(Misc.isEven(-8));
+    @ParameterizedTest
+    @ValueSource(ints = {-2, -4, -6, -8})
+    void testIsEven_NegativeEvenNumbers(int number) {
+        assertTrue(Misc.isEven(number));
     }
 
-    @Test
-    void testIsEven_NegativeOddNumbers() {
-        assertFalse(Misc.isEven(-1));
-        assertFalse(Misc.isEven(-3));
-        assertFalse(Misc.isEven(-5));
-        assertFalse(Misc.isEven(-7));
+    @ParameterizedTest
+    @ValueSource(ints = {-1, -3, -5, -7})
+    void testIsEven_NegativeOddNumbers(int number) {
+        assertFalse(Misc.isEven(number));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints ={4, 9, 16, 25})
+    void testNonPrimePerfectSquares(int number) {
+        assertFalse(isPrime(number, 2));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {6, 15})
+    void testNonPrimeNumbers(int number) {
+        assertFalse(isPrime(number, 2));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2, 3, 5, 7, 11, 13})
+    void testPrimeNumbers(int number) {
+        assertTrue(isPrime(number, 2));
     }
 }

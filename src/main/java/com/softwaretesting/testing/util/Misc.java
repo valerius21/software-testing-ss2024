@@ -48,10 +48,8 @@ public class Misc {
         }
     }
 
+
     public static boolean isPrime(int n, int i) {
-        if (n <= 0) {
-           return false;
-        }
         if (n <= 2) {
             return n == 2;
         }
@@ -64,6 +62,8 @@ public class Misc {
 
         return isPrime(n, i + 1);
     }
+
+
 
     public static boolean isEven(int n) {
         return n % 2 == 0;

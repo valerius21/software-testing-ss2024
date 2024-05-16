@@ -12,8 +12,7 @@ class DebugFactorialTest {
     @Test
     void testConstructor() {
         DebugFactorial debugFactorial = new DebugFactorial();
-        DebugFactorial nullDebugFactorial = null;
-        assertNotEquals(debugFactorial, nullDebugFactorial);
+        assertNotNull(debugFactorial);
     }
 
     @Test

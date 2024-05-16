@@ -12,16 +12,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 class CustomerManagementServiceImpTest {
     @Mock
     private CustomerRepository customerRepository;
 
     @Mock
-    private CustomerValidator _customerValidator;
+    private CustomerValidator customerValidator;
 
     @InjectMocks
     private CustomerManagementServiceImp customerManagementService;
@@ -128,6 +134,48 @@ class CustomerManagementServiceImpTest {
                 .assertEquals("Customer with id " + ID + " does not exists", e.getMessage());
     }
 
+    @Test
+    void findByUserName_Validation404() {
+        when(customerRepository.findByUserName(USERNAME)).thenReturn(Optional.of(customer));
+        doNothing().when(customerValidator).validate404(Optional.of(customer), "User-Name", USERNAME);
+        Customer result = customerManagementService.findByUserName(USERNAME);
+
+        verify(customerRepository, times(1)).findByUserName(USERNAME);
+        verify(customerValidator, times(1)).validate404(Optional.of(customer), "User-Name", USERNAME);
+        assert result.equals(customer);
+    }
+
+    @Test
+    void findById_Validation404() {
+        when(customerRepository.findById(ID)).thenReturn(Optional.of(customer));
+        Customer actualCustomer = customerManagementService.findById(ID);
+
+        assertEquals(customer, actualCustomer);
+        verify(customerRepository, times(1)).findById(ID);
+        verify(customerValidator, times(1))
+                .validate404(Optional.of(customer), "id", String.valueOf(customer.getId()));
+    }
+
+    @Test
+    void selctCustomerByPhoneNumber_Validation404() {
+        when(customerRepository.selectCustomerByPhoneNumber(PHONE_NUMBER)).thenReturn(Optional.of(customer));
+        Customer actualCustomer = customerManagementService.selectCustomerByPhoneNumber(PHONE_NUMBER);
+
+        assertEquals(customer, actualCustomer);
+        verify(customerRepository, times(1)).selectCustomerByPhoneNumber(PHONE_NUMBER);
+        verify(customerValidator, times(1))
+                .validate404(Optional.of(customer), "phone number", PHONE_NUMBER);
+    }
+
+    @Test
+    void deleteCheckCustomerDeleteById() {
+        when(customerRepository.existsById(ID)).thenReturn(true);
+        doNothing().when(customerValidator).validate404(Optional.of(customer), "id", String.valueOf(ID));
+        customerManagementService.delete(ID);
+
+        verify(customerRepository, times(1)).deleteById(ID);
+    }
+
 
     @Test
     void addCustomer() {
@@ -166,7 +214,7 @@ class CustomerManagementServiceImpTest {
                 .when(customerRepository.saveAll(customers))
                 .thenReturn(customers);
         Assertions
-                .assertTrue( customerManagementService.saveAll(customers).containsAll(customers));
+                .assertTrue(customerManagementService.saveAll(customers).containsAll(customers));
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.softwaretesting.testing.customerRegistration.service;
 import com.softwaretesting.testing.exception.BadRequestException;
 import com.softwaretesting.testing.dao.CustomerRepository;
 import com.softwaretesting.testing.model.Customer;
+import com.softwaretesting.testing.validator.PhoneNumberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +23,18 @@ public class CustomerRegistrationService {
 
     @Transactional(rollbackFor = Exception.class)
     public Customer registerNewCustomer(Customer customer) {
-        Optional<Customer> existsPhoneNumber = customerRepository.selectCustomerByPhoneNumber(customer.getPhoneNumber());
+        PhoneNumberValidator phoneNumberValidator = new PhoneNumberValidator();
+        boolean isValid = phoneNumberValidator.validate(customer.getPhoneNumber());
 
-        //TODO: Validate customer phone number
+        if (!isValid) {
+            throw new BadRequestException("Invalid Phone Number");
+        }
+
+        Optional<Customer> existsPhoneNumber = customerRepository.selectCustomerByPhoneNumber(customer.getPhoneNumber());
 
         if (existsPhoneNumber.isPresent()) {
             Customer existingCustomer = existsPhoneNumber.get();
-            if (existingCustomer.getName().equals(customer.getName())){
+            if (existingCustomer.getName().equals(customer.getName())) {
                 throw new IllegalStateException("You are already registered");
             }
             throw new BadRequestException(

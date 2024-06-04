@@ -8,9 +8,14 @@ package com.softwaretesting.testing.dto.inbound;
 
 import com.softwaretesting.testing.model.Customer;
 
+import javax.validation.constraints.NotBlank;
+
 public class CustomerInDTO {
+	@NotBlank
 	private String userName;
+	@NotBlank
 	private String name;
+	@NotBlank
 	private String phoneNumber;
 
 	

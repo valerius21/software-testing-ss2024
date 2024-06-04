@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +38,7 @@ public class CustomerManagementController {
     }
 
     @PostMapping
-    public CustomerOutDTO addCustomer(@RequestBody CustomerInDTO dto) {
+    public CustomerOutDTO addCustomer(@Valid @RequestBody CustomerInDTO dto) {
         Customer customer = dto.toEntity();
         customerManagementService.addCustomer(customer);
         return new CustomerOutDTO(customer);

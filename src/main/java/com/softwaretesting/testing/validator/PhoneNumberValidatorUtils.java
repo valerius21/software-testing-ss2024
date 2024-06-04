@@ -216,7 +216,7 @@ public class PhoneNumberValidatorUtils {
      *
      * @see <a href="https://gist.github.com/tahirSmartboy/14cd096f25c24b30c203#file-gistfile1-txt-L223">Borrowed from here.</a>
      */
-    protected static final List<String> COUNTRY_CALLING_CODES = Arrays.stream(codes).toList();
+    protected static final List<String> COUNTRY_CALLING_CODES = Arrays.stream(codes).collect(Collectors.toList());
 
     /**
      * Removes all characters, except a leading "+", if there is one.

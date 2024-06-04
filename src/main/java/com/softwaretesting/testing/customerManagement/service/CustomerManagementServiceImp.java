@@ -5,6 +5,7 @@ import com.softwaretesting.testing.exception.BadRequestException;
 import com.softwaretesting.testing.exception.CustomerNotFoundException;
 import com.softwaretesting.testing.dao.CustomerRepository;
 import com.softwaretesting.testing.validator.CustomerValidator;
+import com.softwaretesting.testing.validator.PhoneNumberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,6 +80,13 @@ public class CustomerManagementServiceImp implements CustomerManagementService {
     public Customer addCustomer(Customer customer) {
         if(customer.getPhoneNumber().isEmpty()) {
             throw new BadRequestException("Phone Number is empty");
+        }
+
+        PhoneNumberValidator phoneNumberValidator = new PhoneNumberValidator();
+        boolean isValid = phoneNumberValidator.validate(customer.getPhoneNumber());
+
+        if (!isValid) {
+            throw new BadRequestException("Invalid Phone Number");
         }
 
         Optional<Customer> existsPhoneNumber = customerRepository.selectCustomerByPhoneNumber(customer.getPhoneNumber());

@@ -78,9 +78,6 @@ public class CustomerManagementServiceImp implements CustomerManagementService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Customer addCustomer(Customer customer) {
-//        if(customer.getPhoneNumber().isEmpty()) {
-//            throw new BadRequestException("Phone Number is empty");
-//        }
 
         PhoneNumberValidator phoneNumberValidator = new PhoneNumberValidator();
         boolean isValid = phoneNumberValidator.validate(customer.getPhoneNumber());

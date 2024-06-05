@@ -169,4 +169,14 @@ class CustomerManagementControllerTest {
                 .content(payload))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
+
+    @Test
+    void tryToAddCustomerInvalidPhoneNumber() throws Exception {
+        String payload = toJson(this.makeCustomer());
+        payload = payload.replace("+491234", "hallo");
+        mockMvc.perform(MockMvcRequestBuilders.post(CUSTOMER_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
 }

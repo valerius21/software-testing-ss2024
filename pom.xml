@@ -19,7 +19,6 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -73,9 +72,9 @@
                 <version>1.8.0</version>
                 <dependencies>
                     <dependency>
-                            <groupId>org.pitest</groupId>
-                            <artifactId>pitest-junit5-plugin</artifactId>
-                            <version>0.15</version>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>0.15</version>
                     </dependency>
                 </dependencies>
             </plugin>

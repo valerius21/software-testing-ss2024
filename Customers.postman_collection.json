@@ -1,0 +1,1045 @@
+{
+	"info": {
+		"_postman_id": "cde41d2b-35ea-4e51-a736-8fb32cc15dbe",
+		"name": "Customers",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13239232"
+	},
+	"item": [
+		{
+			"name": "List all customers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const resp = pm.response.json()",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    pm.expect(resp).to.be.an('array');",
+							"});",
+							"",
+							"resp.forEach((item, index) => {",
+							"     pm.test(`Item ${index + 1} has required fields`, function () {",
+							"        pm.expect(item).to.have.property('id');",
+							"        pm.expect(item.id).to.be.a('number');",
+							"        pm.expect(item).to.have.property('userName');",
+							"        pm.expect(item.userName).to.be.a('string');",
+							"        pm.expect(item).to.have.property('name');",
+							"        pm.expect(item.name).to.be.a('string');",
+							"        pm.expect(item).to.have.property('phoneNumber');",
+							"        pm.expect(item.phoneNumber).to.be.a('string');",
+							"    });",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customers/list",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find One Customer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const BASE_URL = pm.environment.get(\"BASE_URL\");",
+							"",
+							"pm.test('check if BASE_URL is present', () => {",
+							"    pm.expect(BASE_URL).to.not.be.undefined",
+							"    pm.expect(BASE_URL).to.be.a('string')",
+							"})",
+							"",
+							"pm.sendRequest(`${BASE_URL}/api/v1/customers/list`, function(err, response) {",
+							"    pm.test('check, if list customers response is ok', () => {",
+							"        pm.expect(response.status).to.be.eql(\"OK\")",
+							"    })",
+							"    const customerList = response.json()",
+							"    pm.environment.set(\"previousLength\", customerList.length)",
+							"    const testCustomer = customerList.pop()",
+							"    pm.test('check if popped customer is not undefined', () => {",
+							"        pm.expect(testCustomer).to.be.not.undefined",
+							"        pm.expect(testCustomer).to.be.a('object')",
+							"    })",
+							"    pm.test('check if popped customer has id', () => {",
+							"        pm.expect(testCustomer.id).to.be.a('number')",
+							"    })",
+							"    pm.test('check if popped customer has userName', () => {",
+							"        pm.expect(testCustomer.userName).to.be.a('string')",
+							"    })",
+							"    pm.test('check if popped customer has name', () => {",
+							"        pm.expect(testCustomer.name).to.be.a('string')",
+							"    })",
+							"    pm.test('check if popped customer has phoneNumber', () => {",
+							"        pm.expect(testCustomer.phoneNumber).to.be.a('string')",
+							"    })",
+							"",
+							"    pm.environment.set(\"testCustomerId\", testCustomer.id);",
+							"    pm.environment.set('testCustomerObject', testCustomer);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body is correct\", function () {",
+							"    pm.response.to.have.body(JSON.stringify(pm.environment.get('testCustomerObject')));",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customers/:id",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{testCustomerId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete One Customer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const BASE_URL = pm.environment.get(\"BASE_URL\");",
+							"",
+							"pm.test('check if BASE_URL is present', () => {",
+							"    pm.expect(BASE_URL).to.not.be.undefined",
+							"    pm.expect(BASE_URL).to.be.a('string')",
+							"})",
+							"",
+							"pm.sendRequest(`${BASE_URL}/api/v1/customers/list`, function(err, response) {",
+							"    pm.test('check, if list customers response is ok', () => {",
+							"        pm.expect(response.status).to.be.eql(\"OK\")",
+							"    })",
+							"    const customerList = response.json()",
+							"    pm.environment.set(\"previousLength\", customerList.length)",
+							"    const testCustomer = customerList.pop()",
+							"    pm.test('check if popped customer is not undefined', () => {",
+							"        pm.expect(testCustomer).to.be.not.undefined",
+							"        pm.expect(testCustomer).to.be.a('object')",
+							"    })",
+							"    pm.test('check if popped customer has id', () => {",
+							"        pm.expect(testCustomer.id).to.be.a('number')",
+							"    })",
+							"    pm.test('check if popped customer has userName', () => {",
+							"        pm.expect(testCustomer.userName).to.be.a('string')",
+							"    })",
+							"    pm.test('check if popped customer has name', () => {",
+							"        pm.expect(testCustomer.name).to.be.a('string')",
+							"    })",
+							"    pm.test('check if popped customer has phoneNumber', () => {",
+							"        pm.expect(testCustomer.phoneNumber).to.be.a('string')",
+							"    })",
+							"",
+							"    pm.environment.set(\"testCustomerId\", testCustomer.id);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"const BASE_URL = pm.environment.get(\"BASE_URL\");",
+							"",
+							"pm.test('check if BASE_URL is present', () => {",
+							"    pm.expect(BASE_URL).to.not.be.undefined",
+							"    pm.expect(BASE_URL).to.be.a('string')",
+							"})",
+							"",
+							"pm.sendRequest(`${BASE_URL}/api/v1/customers/list`, function(err, response) {",
+							"    pm.test('check, if list customers response is ok', () => {",
+							"        pm.expect(response.status).to.be.eql(\"OK\")",
+							"    })",
+							"    const customerList = response.json()",
+							"    pm.test('check if list length is shorter', () => {",
+							"        pm.expect(customerList.length).to.be.eql(pm.environment.get('previousLength') - 1)",
+							"    })",
+							"",
+							"",
+							"});",
+							"",
+							"pm.test('customer should not be found', () => {",
+							"    pm.sendRequest(`${BASE_URL}/api/v1/customers/${pm.environment.get('testCustomerId')}`, function(err, response) {",
+							"        pm.expect(response.code).to.be.eql(404);",
+							"    });",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customers/:id",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{testCustomerId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const BASE_URL = pm.environment.get(\"BASE_URL\");",
+							"",
+							"pm.test('check if BASE_URL is present', () => {",
+							"    pm.expect(BASE_URL).to.not.be.undefined",
+							"    pm.expect(BASE_URL).to.be.a('string')",
+							"})",
+							"",
+							"const PHONE_NUMBER = pm.environment.get(\"testPhoneNumber\");",
+							"",
+							"pm.sendRequest(`${BASE_URL}/api/v1/customers/list`, function(err, response) {",
+							"    pm.test('check, if list customers response is ok', () => {",
+							"        pm.expect(response.status).to.be.eql(\"OK\")",
+							"    })",
+							"    const customerList = response.json()",
+							"    customerList.forEach(c => {",
+							"        if (c.phoneNumber == PHONE_NUMBER) {",
+							"            pm.sendRequest({method: \"DELETE\", url: `${BASE_URL}/api/v1/customers/${c.id}`}, (_) => {})",
+							"        }    ",
+							"    })",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Check has ID\", function () {",
+							"    pm.expect(jsonData.id).to.be.a('number')",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check has userName\", function () {",
+							"    pm.expect(jsonData.userName).to.be.eq(pm.environment.get('testUserName'))",
+							"});",
+							"",
+							"pm.test('Check has name', () => {",
+							"    pm.expect(jsonData.name).to.be.eq(pm.environment.get('testName'))",
+							"})",
+							"",
+							"pm.test('Check has phone number', () => {",
+							"    pm.expect(jsonData.phoneNumber).to.be.eq(pm.environment.get('testPhoneNumber'))",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{testUserName}}\",\n    \"name\": \"{{testName}}\",\n    \"phoneNumber\": \"{{testPhoneNumber}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customers/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Registration",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const BASE_URL = pm.environment.get(\"BASE_URL\");",
+							"",
+							"pm.test('check if BASE_URL is present', () => {",
+							"    pm.expect(BASE_URL).to.not.be.undefined",
+							"    pm.expect(BASE_URL).to.be.a('string')",
+							"})",
+							"",
+							"const PHONE_NUMBER = pm.environment.get(\"testPhoneNumber\");",
+							"",
+							"pm.sendRequest(`${BASE_URL}/api/v1/customers/list`, function(err, response) {",
+							"    pm.test('check, if list customers response is ok', () => {",
+							"        pm.expect(response.status).to.be.eql(\"OK\")",
+							"    })",
+							"    const customerList = response.json()",
+							"    customerList.forEach(c => {",
+							"        if (c.phoneNumber == PHONE_NUMBER) {",
+							"            console.log('found')",
+							"            pm.sendRequest({method: \"DELETE\", url: `${BASE_URL}/api/v1/customers/${c.id}`}, (_) => {})",
+							"        }    ",
+							"    })",
+							"})",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Check has ID\", function () {",
+							"    pm.expect(jsonData.id).to.be.a('number')",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check has userName\", function () {",
+							"    pm.expect(jsonData.userName).to.be.eq(pm.environment.get('testUserName'))",
+							"});",
+							"",
+							"pm.test('Check has name', () => {",
+							"    pm.expect(jsonData.name).to.be.eq(pm.environment.get('testName'))",
+							"})",
+							"",
+							"pm.test('Check has phone number', () => {",
+							"    pm.expect(jsonData.phoneNumber).to.be.eq(pm.environment.get('testPhoneNumber'))",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{testUserName}}\",\n    \"name\": \"{{testName}}\",\n    \"phoneNumber\": \"{{testPhoneNumber}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customer-registration/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customer-registration",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Invalid Name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{testUserName}}\",\n    \"name\": \"\",\n    \"phoneNumber\": \"{{testPhoneNumber}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customers/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Invalid Name Registration",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{testUserName}}\",\n    \"name\": \"\",\n    \"phoneNumber\": \"{{testPhoneNumber}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customer-registration/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customer-registration",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Invalid Username",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"\",\n    \"name\": \"{{testName}}\",\n    \"phoneNumber\": \"{{testPhoneNumber}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customers/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Invalid Username Registration",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"\",\n    \"name\": \"{{testName}}\",\n    \"phoneNumber\": \"{{testPhoneNumber}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customer-registration/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customer-registration",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Invalid Phone Number",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{testUserName}}\",\n    \"name\": \"{{testName}}\",\n    \"phoneNumber\": \"{{testInvalidPhoneNumber}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customers/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Invalid Phone Number Registration",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{testUserName}}\",\n    \"name\": \"{{testName}}\",\n    \"phoneNumber\": \"{{testInvalidPhoneNumber}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customer-registration/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customer-registration",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Empty Phone Number",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{testUserName}}\",\n    \"name\": \"{{testName}}\",\n    \"phoneNumber\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customers/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Empty Phone Number Registration",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{testUserName}}\",\n    \"name\": \"{{testName}}\",\n    \"phoneNumber\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customer-registration/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customer-registration",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Duplicate Phone Number",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const BASE_URL = pm.environment.get('BASE_URL')",
+							"pm.test('base url present', () => pm.expect(BASE_URL).to.be.a('string'))",
+							"",
+							"// get a phone number from the database",
+							"pm.sendRequest(`${BASE_URL}/api/v1/customers/list`, function (err, response) {",
+							"    const resp = response.json();",
+							"    const testCustomer = resp.pop()",
+							"    pm.test('check if testCustomer has phone number', () => pm.expect(testCustomer.phoneNumber).to.be.a('string'))",
+							"    pm.environment.set('existingPhoneNumber', testCustomer.phoneNumber)",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Phone number is taken message\", function () {",
+							"    const existingPhoneNumber = pm.environment.get('existingPhoneNumber')",
+							"    pm.expect(pm.response.text()).to.include(existingPhoneNumber);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{testUserName}}\",\n    \"name\": \"{{testName}}\",\n    \"phoneNumber\": \"{{existingPhoneNumber}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customers/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create One Customer Duplicate Phone Number Registration",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const BASE_URL = pm.environment.get('BASE_URL')",
+							"pm.test('base url present', () => pm.expect(BASE_URL).to.be.a('string'))",
+							"",
+							"// get a phone number from the database",
+							"pm.sendRequest(`${BASE_URL}/api/v1/customers/list`, function (err, response) {",
+							"    const resp = response.json();",
+							"    const testCustomer = resp.pop()",
+							"    pm.test('check if testCustomer has phone number', () => pm.expect(testCustomer.phoneNumber).to.be.a('string'))",
+							"    pm.environment.set('existingPhoneNumber', testCustomer.phoneNumber)",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Phone number is taken message\", function () {",
+							"    const existingPhoneNumber = pm.environment.get('existingPhoneNumber')",
+							"    pm.expect(pm.response.text()).to.include(existingPhoneNumber);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"{{testUserName}}\",\n    \"name\": \"{{testName}}\",\n    \"phoneNumber\": \"{{existingPhoneNumber}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customer-registration/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customer-registration",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find non-existing Customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/customers/:id",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"customers",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "-1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "testCustomerId",
+			"value": "-1"
+		}
+	]
+}

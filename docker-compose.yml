@@ -27,6 +27,10 @@ services:
   st-alertmanager:
     image: prom/alertmanager
     restart: unless-stopped
+    environment:
+      - GMAIL_ACCOUNT=${GMAIL_ACCOUNT}
+      - GMAIL_APP_PW=${GMAIL_APP_PW}
+      - TARGET_MAIL=${TARGET_MAIL}
     depends_on:
       - st-testing-application
     ports:

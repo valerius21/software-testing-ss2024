@@ -8,6 +8,20 @@ groups:
           summary: 'Application receiving too many requests'
         labels:
           severity: 'critical'
+      - alert: Wrong Method
+        expr: rate(http_server_requests_seconds_count{status=~"405"}[1m]) > 0
+        for: 1s
+        annotations:
+          summary: 'Application received wrong request type'
+        labels:
+          severity: 'critical'
+      - alert: Not found
+        expr: rate(http_server_requests_seconds_count{status=~"404"}[1m]) > 0
+        for: 1s
+        annotations:
+          summary: 'Requested endpoint did not exist'
+        labels:
+          severity: 'critical'
 
   - name: AllInstances
     rules:

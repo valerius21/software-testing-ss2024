@@ -1,4 +1,58 @@
+# config inspired by https://github.com/PagerTree/prometheus-grafana-alertmanager-example/blob/master/docker-compose.yml
 services:
+  st-testing-application:
+    build: .
+    container_name: st-testing-application
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
   st-grafana:
-    image: grafana/grafana
-    network_mode: 'host'
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: unless-stopped
+    depends_on:
+      - st-prometheus
+      - st-testing-application
+    ports:
+      - "3000:3000"
+    volumes:
+      - 'grafana_data:/var/lib/grafana'
+      - './grafana/dashboards:/var/lib/grafana/dashboards'
+      - './grafana/provisioning:/etc/grafana/provisioning'
+  st-alertmanager:
+    image: prom/alertmanager
+    restart: unless-stopped
+    depends_on:
+      - st-testing-application
+    ports:
+      - "9093:9093"
+    volumes:
+      - './alertmanager:/etc/alertmanager'
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+  st-prometheus:
+    image: prom/prometheus
+    volumes:
+      - './prometheus/:/etc/prometheus/'
+      - 'prometheus_data:/prometheus'
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    restart: always
+    ports:
+      - "9090:9090"
+    depends_on:
+      - st-testing-application
+
+volumes:
+  prometheus_data: { }
+  grafana_data: { }

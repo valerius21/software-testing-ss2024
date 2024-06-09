@@ -13,7 +13,7 @@ services:
       start_period: 10s
   st-grafana:
     image: grafana/grafana-enterprise
-    container_name: grafana
+    container_name: st-grafana
     restart: unless-stopped
     depends_on:
       - st-prometheus

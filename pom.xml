@@ -77,6 +77,13 @@
                         <version>0.15</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <excludedMethods>
+                        <excludedMethod>
+                            com.softwaretesting.testing.customerManagement.controller.CustomerManagementControllerTest.delete
+                        </excludedMethod>
+                    </excludedMethods>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

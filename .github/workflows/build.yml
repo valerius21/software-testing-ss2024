@@ -1,0 +1,43 @@
+# Copy of https://github.com/lquenti/PCSTProject/blob/5badf77f58208a3e1f46d28083def2c1396ad91b/.github/workflows/build.yml
+name: PCST Pipeline on Github
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# Used actions and the docs for them:
+# https://github.com/marketplace/actions/setup-maven-action (community)
+# https://github.com/actions/upload-artifact (official)
+
+jobs:
+  build:
+    name: Build Works
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.13.0
+      - name: Build with mvn
+        run: mvn clean install
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.13.0
+      - name: Run Junit tests (including integration tests and jacoco coverage)
+        run: mvn test
+      - name: Upload jacoco report
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco
+          path: target/site/jacoco
+      - name: Create Mutation coverage (pit)
+        run: "mvn test compile org.pitest:pitest-maven:mutationCoverage"
+      - name: Upload pit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: pit
+          path: target/pit-reports
